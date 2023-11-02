@@ -1,11 +1,14 @@
 import Foundation
 import ComposableArchitecture
 import AVFoundation
+import MediaPlayer
 
 struct Player: Reducer {
     
     struct State: Equatable {
         
+        var book: Book?
+        var artworkImageData: Data?
         var player = AVPlayer()
         var playerProgressState = PlayerProgress.State()
         var playerSpeedState = PlayerSpeed.State()
@@ -23,7 +26,12 @@ struct Player: Reducer {
         case playerSpeed(PlayerSpeed.Action)
         case playerControl(PlayerControl.Action)
         case playerModeSwitcher(PlayerModeSwitcher.Action)
+        case loadArtwork
+        case loadArtworkResponse(TaskResult<Data?>)
+        case updateArtwork(Data)
     }
+    
+    @Dependency(\.bookClient) var bookClient
     
     var body: some ReducerOf<Self> {
         Scope(state: \.playerProgressState, action: /Player.Action.playerProgress) {
@@ -45,6 +53,7 @@ struct Player: Reducer {
         Reduce { state, action in
             switch action {
             case .createPlayer(let book):
+                state.book = book
                 state.playerProgressState.duration = book.duration
                 state.player = createPlayer(with: book)
                 
@@ -62,7 +71,7 @@ struct Player: Reducer {
             case .updateProgress(let progress):
                 state.playerProgressState.progress = progress
                 
-                return .none
+                return updateNowPlayingInfo(state: &state)
                 
             case .finishPlaying:
                 state.playerProgressState.progress = 0
@@ -105,15 +114,22 @@ struct Player: Reducer {
                     if state.player.isNowPlaying == true {
                         state.player.pause()
                         state.playerControlState.isNowPlaying = false
+                        return updateNowPlayingInfo(state: &state)
                     } else {
-                        do {
-                            try AVAudioSession.sharedInstance().setCategory(.playback)
-                            try AVAudioSession.sharedInstance().setActive(true)
-                            
-                            state.player.play()
-                            state.playerControlState.isNowPlaying = true
-                        } catch {
-                            print(error.localizedDescription)
+                        if state.player.currentItem?.status == .readyToPlay {
+                            do {
+                                try AVAudioSession.sharedInstance().setCategory(.playback)
+                                try AVAudioSession.sharedInstance().setActive(true)
+                                
+                                state.player.play()
+                                state.playerControlState.isNowPlaying = true
+                                
+                                return updateNowPlayingInfo(state: &state)
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        } else {
+                            // TODO: handle playback error
                         }
                     }
                     
@@ -127,6 +143,36 @@ struct Player: Reducer {
                 case .sliderValueChanged(let progress):
                     return .send(.seekTo(progress))
                 }
+                
+            case .loadArtwork:
+                guard
+                    let urlString = state.book?.artwork,
+                    let url = URL(string: urlString)
+                else {
+                    return .none
+                }
+                
+                return .run { send in
+                    await send(
+                        .loadArtworkResponse(
+                            TaskResult { try await bookClient.fetchArtwork(url) }
+                        )
+                    )
+                }
+                
+            case .loadArtworkResponse(.failure):
+                return .none
+                
+            case .loadArtworkResponse(.success(let data)):
+                guard let artworkData = data else {
+                    return .none
+                }
+                
+                return .send(.updateArtwork(artworkData))
+                
+            case .updateArtwork(let data):
+                state.artworkImageData = data
+                return updateNowPlayingInfo(state: &state)
             }
         }
     }
@@ -148,6 +194,86 @@ struct Player: Reducer {
         let playerItem = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: playerItem)
         
+        setupRemoteControls()
+        
         return player
+    }
+    
+    private func updateNowPlayingInfo(state: inout State) -> Effect<Player.Action> {
+        guard let book = state.book else {
+            return .none
+        }
+        
+        var nowPlaying: [String: Any] = [
+            MPMediaItemPropertyArtist: book.author,
+            MPMediaItemPropertyTitle: book.title,
+            MPMediaItemPropertyPlaybackDuration: book.duration,
+            MPNowPlayingInfoPropertyPlaybackRate: state.playerControlState.isNowPlaying ? state.playerSpeedState.speed.rawValue : 0,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: state.playerProgressState.progress
+        ]
+        
+        if let artwork = MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyArtwork] {
+            nowPlaying[MPMediaItemPropertyArtwork] = artwork
+        }
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlaying
+        
+        if nowPlaying[MPMediaItemPropertyArtwork] == nil {
+            let updateArtwork: (Data, [String: Any]) -> Void = { imageData, nowPlaying in
+                guard let image = UIImage(data: imageData) else {
+                    return
+                }
+                
+                let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in
+                    return image
+                }
+                
+                var updatedData = nowPlaying
+                updatedData[MPMediaItemPropertyArtwork] = artwork
+                
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = updatedData
+            }
+            
+            if let data = state.artworkImageData {
+                updateArtwork(data, nowPlaying)
+                return .none
+            } else {
+                return .send(.loadArtwork)
+            }
+        } else {
+            return .none
+        }
+    }
+    
+    private func setupRemoteControls() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { _ in
+            return .success
+        }
+        
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.pauseCommand.addTarget { _ in
+            return .success
+        }
+        
+        commandCenter.seekBackwardCommand.isEnabled = true
+        commandCenter.seekBackwardCommand.addTarget { _ in
+            return .success
+        }
+        
+        commandCenter.seekForwardCommand.isEnabled = true
+        commandCenter.seekForwardCommand.addTarget { _ in
+            return .success
+        }
+        
+        commandCenter.changePlaybackPositionCommand.isEnabled = true
+        commandCenter.changePlaybackPositionCommand.addTarget { _ in
+            return .success
+        }
+        
+        commandCenter.nextTrackCommand.isEnabled = false
+        commandCenter.previousTrackCommand.isEnabled = false
     }
 }
