@@ -11,9 +11,11 @@ struct BookPurchaseView: View {
                 Text("Unlock learning")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .redacted(reason: !viewStore.purchaseAvailable ? .placeholder : [])
                 
                 Text("Grow on the go by listening and reading the world's best ideas")
                     .multilineTextAlignment(.center)
+                    .redacted(reason: !viewStore.purchaseAvailable ? .placeholder : [])
                 
                 Button {
                     viewStore.send(.purchase)
@@ -43,6 +45,7 @@ struct BookPurchaseView: View {
                 .buttonStyle(.borderedProminent)
                 .padding(.bottom, 50)
                 .disabled(!viewStore.purchaseAvailable)
+                .redacted(reason: !viewStore.purchaseAvailable ? .placeholder : [])
             }
             .padding(.horizontal)
             .onAppear {

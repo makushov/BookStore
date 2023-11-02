@@ -8,72 +8,72 @@ struct BookItemView: View {
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             Group {
-                if !viewStore.isLoading {
-                    GeometryReader { proxy in
-                        ZStack {
-                            VStack {
-                                AsyncImage(
-                                    url: URL(string: viewStore.book?.artwork ?? "")
-                                ) { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                } placeholder: {
-                                    ZStack {
-                                        Color.clear
-                                        
-                                        ProgressView()
-                                    }
+                GeometryReader { proxy in
+                    ZStack {
+                        VStack {
+                            AsyncImage(
+                                url: URL(string: viewStore.book?.artwork ?? "")
+                            ) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            } placeholder: {
+                                ZStack {
+                                    Image(.bookArtworkPlaceholder)
+                                        .redacted(reason: viewStore.book?.artwork == nil ? .placeholder : [])
                                 }
-                                .padding(.top)
-                                
-                                Text("Key point \(viewStore.currentKeyPointIndex ?? 0) of \(viewStore.book?.chapters.count ?? 0)")
-                                    .textCase(.uppercase)
-                                    .font(.system(size: 13, weight: .bold))
-                                    .foregroundStyle(.gray)
-                                    .padding(.top, 20)
-                                
-                                Text(viewStore.currentKeyPointTitle ?? "\n")
-                                    .font(.subheadline)
-                                    .padding(.top)
-
-                                
-                                PlayerView(
-                                    store: store.scope(
-                                        state: \.playerState,
-                                        action: BookItem.Action.player
-                                    )
-                                )
-                                .padding(.vertical)
                             }
-                            .background(Color.commonBackground)
+                            .padding(.top)
+                            .redacted(reason: viewStore.isLoading ? .placeholder : [])
                             
-                            if !viewStore.purchaseState.isPurchased {
-                                VStack {
-                                    Spacer()
-                                    
-                                    BookPurchaseView(
-                                        store: store.scope(
-                                            state: \.purchaseState,
-                                            action: BookItem.Action.purchaseBook
-                                        )
-                                    )
-                                }
-                                .background(
-                                    LinearGradient(
-                                        gradient: Gradient(
-                                            colors: [.clear, Color.commonBackground]
-                                        ),
-                                        startPoint: .top,
-                                        endPoint: .center
+                            Text("Key point \(viewStore.currentKeyPointIndex ?? 0) of \(viewStore.book?.chapters.count ?? 0)")
+                                .textCase(.uppercase)
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundStyle(.gray)
+                                .padding(.top, 20)
+                                .redacted(reason: viewStore.isLoading ? .placeholder : [])
+                            
+                            Text(viewStore.currentKeyPointTitle ?? "\n")
+                                .font(.subheadline)
+                                .padding(.top)
+                                .redacted(reason: viewStore.isLoading ? .placeholder : [])
+
+                            
+                            PlayerView(
+                                store: store.scope(
+                                    state: \.playerState,
+                                    action: BookItem.Action.player
+                                )
+                            )
+                            .padding(.vertical)
+                            .redacted(reason: viewStore.isLoading ? .placeholder : [])
+                        }
+                        
+                        if !viewStore.purchaseState.isPurchased {
+                            VStack {
+                                Spacer()
+                                
+                                BookPurchaseView(
+                                    store: store.scope(
+                                        state: \.purchaseState,
+                                        action: BookItem.Action.purchaseBook
                                     )
                                 )
-                                .padding(.top, proxy.size.height / 4)
+                                .redacted(reason: viewStore.isLoading ? .placeholder : [])
                             }
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(
+                                        colors: [.clear, Color.commonBackground]
+                                    ),
+                                    startPoint: .top,
+                                    endPoint: .center
+                                )
+                            )
+                            .padding(.top, proxy.size.height / 4)
                         }
                     }
-                } else {
-                    ProgressView()
+                    .background(Color.commonBackground)
                 }
             }
             .onAppear {
