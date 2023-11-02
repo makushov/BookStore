@@ -30,6 +30,7 @@ struct Player: Reducer {
         case loadArtwork
         case loadArtworkResponse(TaskResult<Data?>)
         case updateArtwork(Data)
+        case remoteControl(MPRemoteCommandCenter.MediaEvent)
     }
     
     @Dependency(\.bookClient) var bookClient
@@ -123,6 +124,7 @@ struct Player: Reducer {
                                 try AVAudioSession.sharedInstance().setActive(true)
                                 
                                 state.player.play()
+                                state.player.rate = Float(state.playerSpeedState.speed.rawValue)
                                 state.playerControlState.isNowPlaying = true
                                 
                                 return updateNowPlayingInfo(state: &state)
@@ -179,6 +181,20 @@ struct Player: Reducer {
                 state.isArtworkLoading = false
                 
                 return updateNowPlayingInfo(state: &state)
+                
+            case .remoteControl(let event):
+                switch event {
+                case .play:
+                    return .send(.playerControl(.playPauseTapped))
+                case .pause:
+                    return .send(.playerControl(.playPauseTapped))
+                case .seekBackward:
+                    return .send(.playerControl(.gobackword5Tapped))
+                case .seekForward:
+                    return .send(.playerControl(.goforward10Tapped))
+                case .seekTo(let progress):
+                    return .send(.seekTo(progress))
+                }
             }
         }
     }
@@ -255,32 +271,12 @@ struct Player: Reducer {
         let commandCenter = MPRemoteCommandCenter.shared()
         
         commandCenter.playCommand.isEnabled = true
-        commandCenter.playCommand.addTarget { _ in
-            return .success
-        }
-        
         commandCenter.pauseCommand.isEnabled = true
-        commandCenter.pauseCommand.addTarget { _ in
-            return .success
-        }
-        
         commandCenter.changePlaybackPositionCommand.isEnabled = true
-        commandCenter.changePlaybackPositionCommand.addTarget { _ in
-            return .success
-        }
-        
         commandCenter.skipForwardCommand.isEnabled = true
         commandCenter.skipForwardCommand.preferredIntervals = [10]
-        commandCenter.skipForwardCommand.addTarget { _ in
-            return .success
-        }
-        
         commandCenter.skipBackwardCommand.isEnabled = true
         commandCenter.skipBackwardCommand.preferredIntervals = [5]
-        commandCenter.skipBackwardCommand.addTarget { _ in
-            return .success
-        }
-        
         commandCenter.nextTrackCommand.isEnabled = false
         commandCenter.previousTrackCommand.isEnabled = false
     }

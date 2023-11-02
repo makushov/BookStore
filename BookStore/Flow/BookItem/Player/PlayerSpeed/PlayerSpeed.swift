@@ -7,7 +7,7 @@ struct PlayerSpeed: Reducer {
         
         var speed: Speed = .x1
         
-        enum Speed: Double {
+        enum Speed: Double, CaseIterable {
             
             case x05 = 0.5
             case x1 = 1

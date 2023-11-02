@@ -12,6 +12,7 @@
 		2A0F31CA2AF271790044BCB4 /* BookPurchaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31C92AF271790044BCB4 /* BookPurchaseView.swift */; };
 		2A0F31CF2AF381CB0044BCB4 /* StoreKitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31CE2AF381CB0044BCB4 /* StoreKitClient.swift */; };
 		2A0F31D32AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */; };
+		2A52A09A2AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */; };
 		2ADF9DB72AF0E905005987E9 /* BookStoreApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADF9DB62AF0E905005987E9 /* BookStoreApp.swift */; };
 		2ADF9DBB2AF0E908005987E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ADF9DBA2AF0E908005987E9 /* Assets.xcassets */; };
 		2ADF9DBE2AF0E908005987E9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ADF9DBD2AF0E908005987E9 /* Preview Assets.xcassets */; };
@@ -61,6 +62,7 @@
 		2A0F31CE2AF381CB0044BCB4 /* StoreKitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitClient.swift; sourceTree = "<group>"; };
 		2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductPurchaseResult+Eqatable.swift"; sourceTree = "<group>"; };
 		2A52A0982AF3BF030083D65A /* BookStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BookStore.entitlements; sourceTree = "<group>"; };
+		2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPRemoteCommandCenter+Combine.swift"; sourceTree = "<group>"; };
 		2ADF9DB32AF0E905005987E9 /* BookStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ADF9DB62AF0E905005987E9 /* BookStoreApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStoreApp.swift; sourceTree = "<group>"; };
 		2ADF9DBA2AF0E908005987E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -145,13 +147,13 @@
 		2ADF9DB52AF0E905005987E9 /* BookStore */ = {
 			isa = PBXGroup;
 			children = (
-				2A52A0982AF3BF030083D65A /* BookStore.entitlements */,
-				2ADF9E112AF1626C005987E9 /* Info.plist */,
-				2ADF9E0E2AF1573C005987E9 /* Extensions */,
 				2ADF9DBA2AF0E908005987E9 /* Assets.xcassets */,
+				2A52A0982AF3BF030083D65A /* BookStore.entitlements */,
 				2ADF9DB62AF0E905005987E9 /* BookStoreApp.swift */,
 				2ADF9E0B2AF14860005987E9 /* Clients */,
+				2ADF9E0E2AF1573C005987E9 /* Extensions */,
 				2ADF9E052AF14563005987E9 /* Flow */,
+				2ADF9E112AF1626C005987E9 /* Info.plist */,
 				2ADF9E022AF140C6005987E9 /* Models */,
 				2ADF9DE82AF0EEFA005987E9 /* Modifiers */,
 				2ADF9DBC2AF0E908005987E9 /* Preview Content */,
@@ -273,8 +275,9 @@
 		2ADF9E0E2AF1573C005987E9 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				2ADF9E0F2AF1574D005987E9 /* AVPlayer+NowPlaying.swift */,
 				2A0F31C42AF256A10044BCB4 /* AVPlayer+Combine.swift */,
+				2ADF9E0F2AF1574D005987E9 /* AVPlayer+NowPlaying.swift */,
+				2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */,
 				2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */,
 			);
 			path = Extensions;
@@ -423,6 +426,7 @@
 				2ADF9E042AF140D9005987E9 /* Book.swift in Sources */,
 				2ADF9DEB2AF0EF72005987E9 /* PlayerButton.swift in Sources */,
 				2A0F31D32AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift in Sources */,
+				2A52A09A2AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift in Sources */,
 				2ADF9DFA2AF13242005987E9 /* PlayerSpeedView.swift in Sources */,
 				2ADF9DFF2AF13952005987E9 /* PlayerProgressView.swift in Sources */,
 				2ADF9DF02AF0F1C2005987E9 /* PlayerView.swift in Sources */,

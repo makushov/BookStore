@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import MediaPlayer
 import SwiftUI
 import class AVFoundation.AVPlayerItem
 
@@ -51,6 +52,11 @@ struct PlayerView: View {
                 viewStore.player.periodicTimePublisher(),
                 perform: { time in
                     viewStore.send(.updateProgress(time.seconds))
+                }
+            )
+            .onReceive(
+                MPRemoteCommandCenter.shared().remoteCommandPublisher(), perform: { event in
+                    viewStore.send(.remoteControl(event))
                 }
             )
         }
