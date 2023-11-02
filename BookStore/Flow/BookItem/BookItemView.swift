@@ -8,12 +8,12 @@ struct BookItemView: View {
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             Group {
-                if let book = viewStore.book {
+                if !viewStore.isLoading {
                     GeometryReader { proxy in
                         ZStack {
                             VStack {
                                 AsyncImage(
-                                    url: URL(string: book.artwork)
+                                    url: URL(string: viewStore.book?.artwork ?? "")
                                 ) { image in
                                     image
                                         .resizable()
@@ -25,7 +25,7 @@ struct BookItemView: View {
                                 .padding(.top)
                                 
                                 if let index = viewStore.currentKeyPointIndex {
-                                    Text("Key point \(index) of \(book.chapters.count)")
+                                    Text("Key point \(index) of \(viewStore.book?.chapters.count ?? 0)")
                                         .textCase(.uppercase)
                                         .font(.system(size: 13, weight: .bold))
                                         .foregroundStyle(.gray)

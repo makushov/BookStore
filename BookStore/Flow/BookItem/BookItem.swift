@@ -8,6 +8,7 @@ struct BookItem: Reducer {
         var book: Book?
         var playerState = Player.State()
         var purchaseState = BookPurchase.State()
+        var isLoading: Bool = false
         
         var currentKeyPointIndex: Int? {
             guard
@@ -55,6 +56,8 @@ struct BookItem: Reducer {
         Reduce { state, action in
             switch action {
             case .fetchBook:
+                state.isLoading = true
+                
                 return .run { send in
                     try await send(.bookResponse(bookClient.fetch()))
                 }
@@ -75,9 +78,15 @@ struct BookItem: Reducer {
                 case .purchaseResponse(.failure(let error)):
                     // TODO: show error alert
                     return .none
+                  
+                case .checkSubscriptionStatusResponse(.success):
+                    state.isLoading = false
+                    
+                    return .none
                     
                 case .checkSubscriptionStatusResponse(.failure(let error)):
                     // TODO: show error alert
+                    state.isLoading = false
                     return .none
                     
                 default:
