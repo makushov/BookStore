@@ -19,24 +19,24 @@ struct BookItemView: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                 } placeholder: {
-                                    ProgressView()
-                                        .frame(height: 300)
+                                    ZStack {
+                                        Color.clear
+                                        
+                                        ProgressView()
+                                    }
                                 }
                                 .padding(.top)
                                 
-                                if let index = viewStore.currentKeyPointIndex {
-                                    Text("Key point \(index) of \(viewStore.book?.chapters.count ?? 0)")
-                                        .textCase(.uppercase)
-                                        .font(.system(size: 13, weight: .bold))
-                                        .foregroundStyle(.gray)
-                                        .padding(.top, 20)
-                                }
+                                Text("Key point \(viewStore.currentKeyPointIndex ?? 0) of \(viewStore.book?.chapters.count ?? 0)")
+                                    .textCase(.uppercase)
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundStyle(.gray)
+                                    .padding(.top, 20)
                                 
-                                if let keyPointTitle = viewStore.currentKeyPointTitle {
-                                    Text(keyPointTitle)
-                                        .font(.subheadline)
-                                        .padding(.top)
-                                }
+                                Text(viewStore.currentKeyPointTitle ?? "\n")
+                                    .font(.subheadline)
+                                    .padding(.top)
+
                                 
                                 PlayerView(
                                     store: store.scope(
@@ -76,7 +76,7 @@ struct BookItemView: View {
                     ProgressView()
                 }
             }
-            .task {
+            .onAppear {
                 viewStore.send(.fetchBook)
             }
         }

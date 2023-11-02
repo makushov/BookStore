@@ -72,6 +72,7 @@ struct BookItem: Reducer {
             case .purchaseBook(let action):
                 switch action {
                 case .fetchProductResponse(.failure(let error)):
+                    state.isLoading = false
                     // TODO: show error alert
                     return .none
                     
