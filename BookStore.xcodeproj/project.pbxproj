@@ -55,6 +55,7 @@
 		2A0F31C42AF256A10044BCB4 /* AVPlayer+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayer+Combine.swift"; sourceTree = "<group>"; };
 		2A0F31C72AF270E90044BCB4 /* BookPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPurchase.swift; sourceTree = "<group>"; };
 		2A0F31C92AF271790044BCB4 /* BookPurchaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPurchaseView.swift; sourceTree = "<group>"; };
+		2A0F31CD2AF37F130044BCB4 /* PurchaseConfig.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = PurchaseConfig.storekit; sourceTree = "<group>"; };
 		2ADF9DB32AF0E905005987E9 /* BookStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ADF9DB62AF0E905005987E9 /* BookStoreApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStoreApp.swift; sourceTree = "<group>"; };
 		2ADF9DBA2AF0E908005987E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 				2ADF9E022AF140C6005987E9 /* Models */,
 				2ADF9DE82AF0EEFA005987E9 /* Modifiers */,
 				2ADF9DBC2AF0E908005987E9 /* Preview Content */,
+				2A0F31CD2AF37F130044BCB4 /* PurchaseConfig.storekit */,
 			);
 			path = BookStore;
 			sourceTree = "<group>";
