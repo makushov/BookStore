@@ -21,17 +21,33 @@ struct BookPurchaseView: View {
                     HStack {
                         Spacer()
                         
-                        Text("Start listening • $89.99")
-                            .fontWeight(.bold)
-                            .padding(.vertical)
-                        
+                        Group {
+                            if viewStore.isLoading {
+                                ProgressView()
+                            } else {
+                                Group {
+                                    if let product = viewStore.product {
+                                        Text("Start listening • \(product.displayPrice)")
+                                    } else {
+                                        Text("Unable to connect to AppStore")
+                                    }
+                                }
+                                .fontWeight(.bold)
+                            }
+                        }
+                        .padding(.vertical)
+
                         Spacer()
                     }
                 }
                 .buttonStyle(.borderedProminent)
                 .padding(.bottom, 50)
+                .disabled(!viewStore.purchaseAvailable)
             }
             .padding(.horizontal)
+            .onAppear {
+                viewStore.send(.fetchProduct)
+            }
         }
     }
 }

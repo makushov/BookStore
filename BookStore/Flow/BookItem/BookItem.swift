@@ -8,7 +8,7 @@ struct BookItem: Reducer {
         
         var book: Book?
         var playerState = Player.State()
-        var purchaseState = BookPurchase.State(isPurchased: true)
+        var purchaseState = BookPurchase.State()
         var player = AVPlayer()
         
         var currentKeyPointIndex: Int? {
@@ -92,8 +92,19 @@ struct BookItem: Reducer {
                 state.playerState.playerProgressState.progress = progress
                 return .none
                 
-            case .purchaseBook:
-                return .none
+            case .purchaseBook(let action):
+                switch action {
+                case .fetchProductResponse(.failure(let error)):
+                    // TODO: show error alert
+                    return .none
+                    
+                case .purchaseResponse(.failure(let error)):
+                    // TODO: show error alert
+                    return .none
+                    
+                default:
+                    return .none
+                }
             }
         }
     }
