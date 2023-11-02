@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
+import class AVFoundation.AVPlayerItem
 
 struct PlayerView: View {
     
@@ -39,6 +40,19 @@ struct PlayerView: View {
                 )
                 .padding(.top, 40)
             }
+            .onReceive(
+                NotificationCenter.default.publisher(
+                    for: AVPlayerItem.didPlayToEndTimeNotification
+                ), perform: { _ in
+                    viewStore.send(.finishPlaying)
+                }
+            )
+            .onReceive(
+                viewStore.player.periodicTimePublisher(),
+                perform: { time in
+                    viewStore.send(.updateProgress(time.seconds))
+                }
+            )
         }
     }
 }

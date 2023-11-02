@@ -1,5 +1,4 @@
 import ComposableArchitecture
-import AVFoundation
 import SwiftUI
 
 struct BookItemView: View {
@@ -80,19 +79,6 @@ struct BookItemView: View {
             .task {
                 viewStore.send(.fetchBook)
             }
-            .onReceive(
-                NotificationCenter.default.publisher(
-                    for: AVPlayerItem.didPlayToEndTimeNotification
-                ), perform: { _ in
-                    viewStore.send(.finishPlaying)
-                }
-            )
-            .onReceive(
-                viewStore.player.periodicTimePublisher(),
-                perform: { time in
-                    viewStore.send(.updateProgress(time.seconds))
-                }
-            )
         }
     }
 }

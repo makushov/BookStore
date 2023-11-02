@@ -21,6 +21,8 @@ struct BookPurchase: Reducer {
         case fetchProductResponse(TaskResult<Product?>)
         case purchase
         case purchaseResponse(TaskResult<Product.PurchaseResult>)
+        case checkSubscriptionStatus
+        case checkSubscriptionStatusResponse(TaskResult<Product.SubscriptionInfo.Status?>)
     }
     
     @Dependency(\.storeKitClient) var storeClient
@@ -41,9 +43,8 @@ struct BookPurchase: Reducer {
                 
             case .fetchProductResponse(.success(let product)):
                 state.product = product
-                state.isLoading = false
                 
-                return .none
+                return .send(.checkSubscriptionStatus)
                 
             case .fetchProductResponse(.failure):
                 state.isLoading = false
@@ -78,6 +79,34 @@ struct BookPurchase: Reducer {
                 }
                 
             case .purchaseResponse(.failure):
+                state.isLoading = false
+                
+                return .none
+                
+            case .checkSubscriptionStatus:
+                guard let product = state.product else {
+                    state.isLoading = false
+                    return .none
+                }
+                
+                return .run { send in
+                    await send(
+                        .checkSubscriptionStatusResponse(
+                            TaskResult { try await storeClient.checkSubscriptionStatus(product) }
+                        )
+                    )
+                }
+                
+            case .checkSubscriptionStatusResponse(.success(let status)):
+                state.isLoading = false
+                
+                if let status, case .subscribed = status.state {
+                    state.isPurchased = true
+                }
+                
+                return .none
+                
+            case .checkSubscriptionStatusResponse(.failure):
                 state.isLoading = false
                 
                 return .none

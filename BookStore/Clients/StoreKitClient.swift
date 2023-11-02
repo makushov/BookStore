@@ -5,6 +5,7 @@ struct StoreKitClient {
     
     var fetchProduct: (String) async throws -> Product?
     var purchaseProduct: (Product) async throws -> Product.PurchaseResult
+    var checkSubscriptionStatus: (Product) async throws -> Product.SubscriptionInfo.Status?
 }
 
 extension StoreKitClient: DependencyKey {
@@ -15,6 +16,9 @@ extension StoreKitClient: DependencyKey {
         },
         purchaseProduct: { product in
             return try await product.purchase()
+        },
+        checkSubscriptionStatus: { product in
+            return try await product.subscription?.status.first
         }
     )
 }
