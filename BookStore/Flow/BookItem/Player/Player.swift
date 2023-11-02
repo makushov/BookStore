@@ -9,6 +9,7 @@ struct Player: Reducer {
         
         var book: Book?
         var artworkImageData: Data?
+        var isArtworkLoading: Bool = false
         var player = AVPlayer()
         var playerProgressState = PlayerProgress.State()
         var playerSpeedState = PlayerSpeed.State()
@@ -152,6 +153,8 @@ struct Player: Reducer {
                     return .none
                 }
                 
+                state.isArtworkLoading = false
+                
                 return .run { send in
                     await send(
                         .loadArtworkResponse(
@@ -161,6 +164,7 @@ struct Player: Reducer {
                 }
                 
             case .loadArtworkResponse(.failure):
+                state.isArtworkLoading = false
                 return .none
                 
             case .loadArtworkResponse(.success(let data)):
@@ -172,6 +176,8 @@ struct Player: Reducer {
                 
             case .updateArtwork(let data):
                 state.artworkImageData = data
+                state.isArtworkLoading = false
+                
                 return updateNowPlayingInfo(state: &state)
             }
         }
@@ -258,18 +264,20 @@ struct Player: Reducer {
             return .success
         }
         
-        commandCenter.seekBackwardCommand.isEnabled = true
-        commandCenter.seekBackwardCommand.addTarget { _ in
-            return .success
-        }
-        
-        commandCenter.seekForwardCommand.isEnabled = true
-        commandCenter.seekForwardCommand.addTarget { _ in
-            return .success
-        }
-        
         commandCenter.changePlaybackPositionCommand.isEnabled = true
         commandCenter.changePlaybackPositionCommand.addTarget { _ in
+            return .success
+        }
+        
+        commandCenter.skipForwardCommand.isEnabled = true
+        commandCenter.skipForwardCommand.preferredIntervals = [10]
+        commandCenter.skipForwardCommand.addTarget { _ in
+            return .success
+        }
+        
+        commandCenter.skipBackwardCommand.isEnabled = true
+        commandCenter.skipBackwardCommand.preferredIntervals = [5]
+        commandCenter.skipBackwardCommand.addTarget { _ in
             return .success
         }
         

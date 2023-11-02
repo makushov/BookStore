@@ -14,7 +14,7 @@ extension BookClient: DependencyKey {
             return Book.sample
         },
         fetchArtwork: { url in
-            let data = try Data(contentsOf: url)
+            let data = try await URLSession.shared.data(from: url).0
             return data
         }
     )
