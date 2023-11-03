@@ -9,18 +9,23 @@ import XCTest
 final class PlayerTests: XCTestCase {
     
     func testPlayerSeekOptions() async {
+        guard let placeholderArtworkData = UIImage(resource: .bookArtworkPlaceholder).heicData() else {
+            XCTFail("No image data")
+            return
+        }
+
         let store = TestStore(initialState: Player.State()) {
             Player()
         }
         
         let book = Book.sample
         
-        guard let placeholderArtworkData = UIImage(resource: .bookArtworkPlaceholder).heicData() else {
-            XCTFail("No image data")
-            return
-        }
-        
+        /*
+         I have no idea how to make AVPlayer match state changes expectations... :(
+         Other test staff (listed below) seems to be working as expected
+         */
         await store.send(.createPlayer(book)) {
+            //$0.player = ???
             $0.book = Book.sample
             $0.playerProgressState.duration = book.duration
         }
