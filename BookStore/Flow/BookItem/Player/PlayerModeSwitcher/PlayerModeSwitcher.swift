@@ -22,8 +22,7 @@ struct PlayerModeSwitcher: Reducer {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .switchState(let mode):
-                state.mode = mode
+            case .switchState:
                 return .none
             }
         }

@@ -13,6 +13,9 @@
 		2A0F31CF2AF381CB0044BCB4 /* StoreKitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31CE2AF381CB0044BCB4 /* StoreKitClient.swift */; };
 		2A0F31D32AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */; };
 		2A52A09A2AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */; };
+		2A70FD4A2AF4CF5500B94931 /* ChaptersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A70FD492AF4CF5500B94931 /* ChaptersList.swift */; };
+		2A70FD4C2AF4D02500B94931 /* ChaptersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A70FD4B2AF4D02500B94931 /* ChaptersListView.swift */; };
+		2A70FD4E2AF4D43B00B94931 /* TimeInterval+DisplayableTimeCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A70FD4D2AF4D43B00B94931 /* TimeInterval+DisplayableTimeCode.swift */; };
 		2ADF9DB72AF0E905005987E9 /* BookStoreApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADF9DB62AF0E905005987E9 /* BookStoreApp.swift */; };
 		2ADF9DBB2AF0E908005987E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ADF9DBA2AF0E908005987E9 /* Assets.xcassets */; };
 		2ADF9DBE2AF0E908005987E9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ADF9DBD2AF0E908005987E9 /* Preview Assets.xcassets */; };
@@ -63,6 +66,9 @@
 		2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductPurchaseResult+Eqatable.swift"; sourceTree = "<group>"; };
 		2A52A0982AF3BF030083D65A /* BookStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BookStore.entitlements; sourceTree = "<group>"; };
 		2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPRemoteCommandCenter+Combine.swift"; sourceTree = "<group>"; };
+		2A70FD492AF4CF5500B94931 /* ChaptersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChaptersList.swift; sourceTree = "<group>"; };
+		2A70FD4B2AF4D02500B94931 /* ChaptersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChaptersListView.swift; sourceTree = "<group>"; };
+		2A70FD4D2AF4D43B00B94931 /* TimeInterval+DisplayableTimeCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+DisplayableTimeCode.swift"; sourceTree = "<group>"; };
 		2ADF9DB32AF0E905005987E9 /* BookStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ADF9DB62AF0E905005987E9 /* BookStoreApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStoreApp.swift; sourceTree = "<group>"; };
 		2ADF9DBA2AF0E908005987E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -123,6 +129,15 @@
 				2A0F31C92AF271790044BCB4 /* BookPurchaseView.swift */,
 			);
 			path = BookPurchase;
+			sourceTree = "<group>";
+		};
+		2A70FD482AF4CF3700B94931 /* ChaptersList */ = {
+			isa = PBXGroup;
+			children = (
+				2A70FD492AF4CF5500B94931 /* ChaptersList.swift */,
+				2A70FD4B2AF4D02500B94931 /* ChaptersListView.swift */,
+			);
+			path = ChaptersList;
 			sourceTree = "<group>";
 		};
 		2ADF9DAA2AF0E905005987E9 = {
@@ -258,6 +273,7 @@
 				2ADF9E072AF1459A005987E9 /* BookItem.swift */,
 				2ADF9E092AF14693005987E9 /* BookItemView.swift */,
 				2A0F31C62AF270C00044BCB4 /* BookPurchase */,
+				2A70FD482AF4CF3700B94931 /* ChaptersList */,
 				2ADF9DEC2AF0F108005987E9 /* Player */,
 			);
 			path = BookItem;
@@ -279,6 +295,7 @@
 				2ADF9E0F2AF1574D005987E9 /* AVPlayer+NowPlaying.swift */,
 				2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */,
 				2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */,
+				2A70FD4D2AF4D43B00B94931 /* TimeInterval+DisplayableTimeCode.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -420,6 +437,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2ADF9DE22AF0EADF005987E9 /* PlayerControl.swift in Sources */,
+				2A70FD4A2AF4CF5500B94931 /* ChaptersList.swift in Sources */,
 				2ADF9DB72AF0E905005987E9 /* BookStoreApp.swift in Sources */,
 				2ADF9E0A2AF14693005987E9 /* BookItemView.swift in Sources */,
 				2A0F31C82AF270E90044BCB4 /* BookPurchase.swift in Sources */,
@@ -436,8 +454,10 @@
 				2ADF9E082AF1459A005987E9 /* BookItem.swift in Sources */,
 				2ADF9DF32AF12E82005987E9 /* PlayerModeSwitcher.swift in Sources */,
 				2ADF9DF82AF1317B005987E9 /* PlayerSpeed.swift in Sources */,
+				2A70FD4C2AF4D02500B94931 /* ChaptersListView.swift in Sources */,
 				2ADF9DFD2AF13477005987E9 /* PlayerProgress.swift in Sources */,
 				2A0F31C52AF256A10044BCB4 /* AVPlayer+Combine.swift in Sources */,
+				2A70FD4E2AF4D43B00B94931 /* TimeInterval+DisplayableTimeCode.swift in Sources */,
 				2ADF9E012AF13BFA005987E9 /* TimecodeText.swift in Sources */,
 				2ADF9DF52AF12F55005987E9 /* PlayerModeSwitcherView.swift in Sources */,
 				2ADF9DEE2AF0F129005987E9 /* Player.swift in Sources */,

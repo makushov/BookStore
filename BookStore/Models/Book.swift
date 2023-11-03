@@ -1,6 +1,6 @@
 struct Book {
     
-    struct Chapter {
+    struct Chapter: Equatable, Identifiable {
         
         let id: Int
         let title: String

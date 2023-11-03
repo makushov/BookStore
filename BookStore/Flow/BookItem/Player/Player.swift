@@ -31,6 +31,7 @@ struct Player: Reducer {
         case loadArtworkResponse(TaskResult<Data?>)
         case updateArtwork(Data)
         case remoteControl(MPRemoteCommandCenter.MediaEvent)
+        case error(PlayerError)
     }
     
     @Dependency(\.bookClient) var bookClient
@@ -133,6 +134,13 @@ struct Player: Reducer {
                             }
                         } else {
                             // TODO: handle playback error
+                            return .send(
+                                .error(
+                                    .playbackError(
+                                        state.player.currentItem?.error?.localizedDescription ?? "Unable to play right now. Please, try again later"
+                                    )
+                                )
+                            )
                         }
                     }
                     
@@ -195,6 +203,9 @@ struct Player: Reducer {
                 case .seekTo(let progress):
                     return .send(.seekTo(progress))
                 }
+                
+            case .error:
+                return .none
             }
         }
     }
@@ -279,5 +290,17 @@ struct Player: Reducer {
         commandCenter.skipBackwardCommand.preferredIntervals = [5]
         commandCenter.nextTrackCommand.isEnabled = false
         commandCenter.previousTrackCommand.isEnabled = false
+    }
+}
+
+enum PlayerError: Error, Equatable {
+    
+    case playbackError(String)
+    
+    var message: String {
+        switch self {
+        case .playbackError(let message):
+            return message
+        }
     }
 }

@@ -79,6 +79,18 @@ struct BookItemView: View {
             .onAppear {
                 viewStore.send(.fetchBook)
             }
+            .sheet(
+                store: store.scope(state: \.$destination, action: { .destination($0) }),
+                state: /BookItem.Destination.State.chaptersList,
+                action: BookItem.Destination.Action.chaptersList
+            ) { chaptersListStore in
+                ChaptersListView(store: chaptersListStore)
+            }
+            .alert(
+                store: store.scope(state: \.$destination, action: { .destination($0) }),
+                state: /BookItem.Destination.State.alert,
+                action: BookItem.Destination.Action.alert
+            )
         }
     }
 }
@@ -86,7 +98,9 @@ struct BookItemView: View {
 #Preview {
     BookItemView(
         store: Store(
-            initialState: BookItem.State()
+            initialState: BookItem.State(
+                purchaseState: BookPurchase.State(isPurchased: true)
+            )
         ) {
             BookItem()
         }
