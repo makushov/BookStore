@@ -38,7 +38,7 @@ struct BookPurchase: Reducer {
                 return .run { send in
                     await send(
                         .fetchProductResponse(
-                            TaskResult { try await storeClient.fetchProduct("one_year") }
+                            TaskResult { try await storeClient.fetchProduct(SubscriptionPlans.oneYear.rawValue) }
                         )
                     )
                 }

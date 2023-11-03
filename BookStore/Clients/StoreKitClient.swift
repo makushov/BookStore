@@ -1,6 +1,12 @@
 import StoreKit
 import ComposableArchitecture
 
+protocol BookProduct {
+    
+    var id: String { get }
+    var displayPrice: String { get }
+}
+
 struct StoreKitClient {
     
     var fetchProduct: (String) async throws -> Product?
@@ -11,6 +17,18 @@ struct StoreKitClient {
 extension StoreKitClient: DependencyKey {
     
     static let liveValue = Self(
+        fetchProduct: { productId in
+            return try await Product.products(for: [productId]).first
+        },
+        purchaseProduct: { product in
+            return try await product.purchase()
+        },
+        checkSubscriptionStatus: { product in
+            return try await product.subscription?.status.first
+        }
+    )
+    
+    static let testValue = Self(
         fetchProduct: { productId in
             return try await Product.products(for: [productId]).first
         },
@@ -32,3 +50,5 @@ extension DependencyValues {
         }
     }
 }
+
+extension Product: BookProduct {}

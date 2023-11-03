@@ -45,11 +45,7 @@ struct ChaptersListView: View {
     ChaptersListView(
         store: Store(
             initialState: ChaptersList.State(
-                chapters: [
-                    Book.Chapter(id: 1, title: "Beginning", timecode: 0),
-                    Book.Chapter(id: 2, title: "Middle", timecode: 900),
-                    Book.Chapter(id: 3, title: "30 sec to end", timecode: 1770)
-                ],
+                chapters: IdentifiedArrayOf(uniqueElements: Book.Chapter.sample),
                 currentTimecode: 0
             )
         ) {

@@ -1,5 +1,6 @@
 import Foundation
 import ComposableArchitecture
+import SwiftUI
 
 struct BookClient {
     
@@ -18,6 +19,15 @@ extension BookClient: DependencyKey {
             return data
         }
     )
+    
+    static let testValue = Self(
+        fetch: {
+            return Book.sample
+        },
+        fetchArtwork: { _ in
+            return UIImage(resource: .bookArtworkPlaceholder).heicData()!
+        }
+    )
 }
 
 extension DependencyValues {
@@ -27,3 +37,5 @@ extension DependencyValues {
         set { self[BookClient.self] = newValue }
     }
 }
+
+

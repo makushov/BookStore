@@ -10,7 +10,7 @@ struct Player: Reducer {
         var book: Book?
         var artworkImageData: Data?
         var isArtworkLoading: Bool = false
-        var player = AVPlayer()
+        var player: AVPlayer = AVPlayer()
         var playerProgressState = PlayerProgress.State()
         var playerSpeedState = PlayerSpeed.State()
         var playerControlState = PlayerControl.State()
@@ -69,7 +69,7 @@ struct Player: Reducer {
                     toleranceAfter: .positiveInfinity
                 )
                 
-                return .none
+                return .send(.updateProgress(progress))
                 
             case .updateProgress(let progress):
                 state.playerProgressState.progress = progress
@@ -101,11 +101,7 @@ struct Player: Reducer {
                     return .send(.seekTo(.zero))
                     
                 case .forwardTapped:
-                    guard let duration = state.player.currentItem?.duration.seconds else {
-                        return .none
-                    }
-                    
-                    return .send(.seekTo(duration))
+                    return .send(.seekTo(state.playerProgressState.duration))
                     
                 case .gobackword5Tapped:
                     return .send(.seekTo(max(state.playerProgressState.progress - 5, 0)))
