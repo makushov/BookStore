@@ -130,10 +130,20 @@ struct Player: Reducer {
                                 
                                 return updateNowPlayingInfo(state: &state)
                             } catch {
-                                print(error.localizedDescription)
+                                state.playerControlState.isNowPlaying = false
+                                return .send(
+                                    .error(
+                                        .playbackError(error.localizedDescription)
+                                    )
+                                )
                             }
                         } else {
-                            // TODO: handle playback error
+                            state.playerControlState.isNowPlaying = false
+                            
+                            if let book = state.book {
+                                state.player = createPlayer(with: book)
+                            }
+                            
                             return .send(
                                 .error(
                                     .playbackError(
@@ -143,8 +153,6 @@ struct Player: Reducer {
                             )
                         }
                     }
-                    
-                    return .none
                 }
             case .playerModeSwitcher:
                 return .none

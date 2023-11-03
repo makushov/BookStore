@@ -70,11 +70,14 @@ struct BookItem: Reducer {
                 }
                 
             case .bookResponse(let book):
+                state.isLoading = false
                 state.book = book
                 return .send(.player(.createPlayer(book)))
-                
-            case .purchaseBook(let action):
-                return handlePurchaseAction(action: action, state: &state)
+
+            case let .purchaseBook(.error(error)):
+                state.isLoading = false
+                state.destination = .alert(.error(message: error.message))
+                return .none
                 
             case let .player(.error(error)):
                 state.destination = .alert(.error(message: error.message))
@@ -96,11 +99,15 @@ struct BookItem: Reducer {
                 )
                 
                 return .none
-            case .player:
-                return .none
                 
             case let .destination(.presented(.chaptersList(.chapterSelected(chapter)))):
                 return .send(.player(.seekTo(chapter.timecode)))
+                
+            case .player:
+                return .none
+                
+            case .purchaseBook:
+                return .none
                 
             case .destination:
                 return .none
@@ -108,35 +115,6 @@ struct BookItem: Reducer {
         }
         .ifLet(\.$destination, action: /Action.destination) {
             Destination()
-        }
-    }
-    
-    private func handlePurchaseAction(
-        action: BookPurchase.Action,
-        state: inout State
-    ) -> Effect<BookItem.Action> {
-        switch action {
-        case .fetchProductResponse(.failure(let error)):
-            state.isLoading = false
-            state.destination = .alert(.error(message: error.localizedDescription))
-            return .none
-            
-        case .purchaseResponse(.failure(let error)):
-            state.destination = .alert(.error(message: error.localizedDescription))
-            return .none
-          
-        case .checkSubscriptionStatusResponse(.success):
-            state.isLoading = false
-            
-            return .none
-            
-        case .checkSubscriptionStatusResponse(.failure(let error)):
-            state.destination = .alert(.error(message: error.localizedDescription))
-            state.isLoading = false
-            return .none
-            
-        default:
-            return .none
         }
     }
 }

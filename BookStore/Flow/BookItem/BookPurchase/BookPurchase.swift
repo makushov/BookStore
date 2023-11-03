@@ -24,6 +24,7 @@ struct BookPurchase: Reducer {
         case purchaseResponse(TaskResult<Product.PurchaseResult>)
         case checkSubscriptionStatus
         case checkSubscriptionStatusResponse(TaskResult<Product.SubscriptionInfo.Status?>)
+        case error(PurchaseError)
     }
     
     @Dependency(\.storeKitClient) var storeClient
@@ -47,10 +48,10 @@ struct BookPurchase: Reducer {
                 
                 return .send(.checkSubscriptionStatus)
                 
-            case .fetchProductResponse(.failure):
+            case .fetchProductResponse(.failure(let error)):
                 state.isLoading = false
                 
-                return .none
+                return .send(.error(.fetchError(error.localizedDescription)))
                 
             case .purchase:
                 guard let product = state.product else {
@@ -71,18 +72,29 @@ struct BookPurchase: Reducer {
                 state.isPurchasing = false
                 
                 switch result {
-                case .success:
-                    state.isPurchased = true
+                case .success(let verification):
+                    switch verification {
+                    case .verified(let transaction):
+                        state.isPurchased = true
+                        return .run { _ in
+                            await transaction.finish()
+                        }
+                        
+                    case .unverified(_, let error):
+                        return .send(.error(.verificationError(error.localizedDescription)))
+                    }
                     
-                    return .none
+                case .pending:
+                    return .send(.error(.pending("Your purchase is in progress... ")))
+                    
                 default:
                     return .none
                 }
                 
-            case .purchaseResponse(.failure):
+            case .purchaseResponse(.failure(let error)):
                 state.isPurchasing = false
                 
-                return .none
+                return .send(.error(.purchaseError(error.localizedDescription)))
                 
             case .checkSubscriptionStatus:
                 guard let product = state.product else {
@@ -111,7 +123,31 @@ struct BookPurchase: Reducer {
                 state.isLoading = false
                 
                 return .none
+                
+            case .error:
+                return .none
             }
+        }
+    }
+}
+
+enum PurchaseError: Equatable {
+    
+    case fetchError(String)
+    case purchaseError(String)
+    case verificationError(String)
+    case pending(String)
+    
+    var message: String {
+        switch self {
+        case .fetchError(let message):
+            return message
+        case .purchaseError(let message):
+            return message
+        case .verificationError(let message):
+            return message
+        case .pending(let message):
+            return message
         }
     }
 }
