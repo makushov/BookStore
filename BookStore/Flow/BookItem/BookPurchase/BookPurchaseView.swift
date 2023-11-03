@@ -11,11 +11,11 @@ struct BookPurchaseView: View {
                 Text("Unlock learning")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .redacted(reason: !viewStore.purchaseAvailable ? .placeholder : [])
+                    .redacted(reason: viewStore.isLoading ? .placeholder : [])
                 
                 Text("Grow on the go by listening and reading the world's best ideas")
                     .multilineTextAlignment(.center)
-                    .redacted(reason: !viewStore.purchaseAvailable ? .placeholder : [])
+                    .redacted(reason: viewStore.isLoading ? .placeholder : [])
                 
                 Button {
                     viewStore.send(.purchase)
@@ -24,7 +24,7 @@ struct BookPurchaseView: View {
                         Spacer()
                         
                         Group {
-                            if viewStore.isLoading {
+                            if viewStore.isPurchasing {
                                 ProgressView()
                             } else {
                                 Group {
@@ -45,7 +45,7 @@ struct BookPurchaseView: View {
                 .buttonStyle(.borderedProminent)
                 .padding(.bottom, 50)
                 .disabled(!viewStore.purchaseAvailable)
-                .redacted(reason: !viewStore.purchaseAvailable ? .placeholder : [])
+                .redacted(reason: viewStore.isLoading ? .placeholder : [])
             }
             .padding(.horizontal)
             .onAppear {

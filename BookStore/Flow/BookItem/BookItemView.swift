@@ -18,10 +18,10 @@ struct BookItemView: View {
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                             } placeholder: {
-                                ZStack {
-                                    Image(.bookArtworkPlaceholder)
-                                        .redacted(reason: viewStore.book?.artwork == nil ? .placeholder : [])
-                                }
+                                Image(.bookArtworkPlaceholder)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .redacted(reason: viewStore.book?.artwork == nil ? .placeholder : [])
                             }
                             .padding(.top)
                             .redacted(reason: viewStore.isLoading ? .placeholder : [])

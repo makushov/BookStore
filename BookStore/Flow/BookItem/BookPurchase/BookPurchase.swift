@@ -9,9 +9,10 @@ struct BookPurchase: Reducer {
         var isPurchased: Bool = false
         var product: Product?
         var isLoading: Bool = false
+        var isPurchasing: Bool = false
         
         var purchaseAvailable: Bool {
-            return !isLoading && product != nil
+            return !isLoading && !isPurchasing && !isPurchased && product != nil
         }
     }
     
@@ -56,7 +57,7 @@ struct BookPurchase: Reducer {
                     return .none
                 }
                 
-                state.isLoading = true
+                state.isPurchasing = true
                 
                 return .run { send in
                     await send(
@@ -67,7 +68,7 @@ struct BookPurchase: Reducer {
                 }
                 
             case .purchaseResponse(.success(let result)):
-                state.isLoading = false
+                state.isPurchasing = false
                 
                 switch result {
                 case .success:
@@ -79,7 +80,7 @@ struct BookPurchase: Reducer {
                 }
                 
             case .purchaseResponse(.failure):
-                state.isLoading = false
+                state.isPurchasing = false
                 
                 return .none
                 
