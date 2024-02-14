@@ -48,12 +48,12 @@ struct PlayerView: View {
                     viewStore.send(.finishPlaying)
                 }
             )
-            .onReceive(
-                viewStore.player.periodicTimePublisher(),
-                perform: { time in
-                    viewStore.send(.updateProgress(time.seconds))
-                }
-            )
+//            .onReceive(
+//                viewStore.playerClient.periodicTimePublisher(),
+//                perform: { time in
+//                    viewStore.send(.updateProgress(time.seconds))
+//                }
+//            )
             .onReceive(
                 MPRemoteCommandCenter.shared().remoteCommandPublisher(), perform: { event in
                     viewStore.send(.remoteControl(event))

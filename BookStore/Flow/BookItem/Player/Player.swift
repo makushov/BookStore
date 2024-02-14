@@ -2,6 +2,7 @@ import Foundation
 import ComposableArchitecture
 import AVFoundation
 import MediaPlayer
+import Combine
 
 @Reducer
 struct Player {
@@ -11,7 +12,6 @@ struct Player {
         var book: Book?
         var artworkImageData: Data?
         var isArtworkLoading: Bool = false
-        var player: AVPlayer = AVPlayer()
         var playerProgressState = PlayerProgress.State()
         var playerSpeedState = PlayerSpeed.State()
         var playerControlState = PlayerControl.State()
@@ -36,6 +36,7 @@ struct Player {
     }
     
     @Dependency(\.bookClient) private var bookClient
+    @Dependency(\.playerClient) private var playerClient
     
     var body: some ReducerOf<Self> {
         Scope(state: \.playerProgressState, action: /Player.Action.playerProgress) {
@@ -59,39 +60,39 @@ struct Player {
             case .createPlayer(let book):
                 state.book = book
                 state.playerProgressState.duration = book.duration
-                state.player = createPlayer(with: book)
                 
-                return .none
+                if let url = URL(string: book.mediaUrl) {
+                    playerClient.createPlayer(url)
+                }
+                
+                return .send(.loadArtwork)
                 
             case .seekTo(let progress):
-                state.player.seek(
-                    to: CMTime(seconds: progress, preferredTimescale: 60000),
-                    toleranceBefore: .positiveInfinity,
-                    toleranceAfter: .positiveInfinity
-                )
+                playerClient.seekTo(progress)
                 
                 return .send(.updateProgress(progress))
                 
             case .updateProgress(let progress):
                 state.playerProgressState.progress = progress
+                updateNowPlayingInfo(state)
                 
-                return updateNowPlayingInfo(state: &state)
+                return .none
                 
             case .finishPlaying:
                 state.playerProgressState.progress = 0
                 state.playerControlState.isNowPlaying = false
-                state.player.pause()
+                playerClient.pause()
                 
                 return .send(.seekTo(.zero))
                 
             case .playerSpeed(let action):
                 switch action {
                 case .playerSpeedTapped:
-                    guard state.player.isNowPlaying == true else {
+                    guard playerClient.isNowPlaying() else {
                         return .none
                     }
                     
-                    state.player.rate = Float(state.playerSpeedState.speed.rawValue)
+                    playerClient.setPlayingSpeed(state.playerSpeedState.speed.rawValue)
                     
                     return .none
                 }
@@ -111,41 +112,30 @@ struct Player {
                     return .send(.seekTo(min(state.playerProgressState.progress + 10, state.playerProgressState.duration)))
                     
                 case .playPauseTapped:
-                    if state.player.isNowPlaying == true {
-                        state.player.pause()
+                    if playerClient.isNowPlaying() {
+                        playerClient.pause()
                         state.playerControlState.isNowPlaying = false
-                        return updateNowPlayingInfo(state: &state)
+                        
+                        updateNowPlayingInfo(state)
+                        
+                        return .none
                     } else {
-                        if state.player.currentItem?.status == .readyToPlay {
-                            do {
-                                try AVAudioSession.sharedInstance().setCategory(.playback)
-                                try AVAudioSession.sharedInstance().setActive(true)
-                                
-                                state.player.play()
-                                state.player.rate = Float(state.playerSpeedState.speed.rawValue)
-                                state.playerControlState.isNowPlaying = true
-                                
-                                return updateNowPlayingInfo(state: &state)
-                            } catch {
-                                state.playerControlState.isNowPlaying = false
-                                return .send(
-                                    .error(
-                                        .playbackError(error.localizedDescription)
-                                    )
-                                )
-                            }
-                        } else {
+                        do {
+                            try playerClient.play()
+                            playerClient.setPlayingSpeed(state.playerSpeedState.speed.rawValue)
+                            state.playerControlState.isNowPlaying = true
+                            
+                            return .none
+                        } catch {
                             state.playerControlState.isNowPlaying = false
                             
-                            if let book = state.book {
-                                state.player = createPlayer(with: book)
+                            if let book = state.book, let url = URL(string: book.mediaUrl) {
+                                playerClient.createPlayer(url)
                             }
                             
                             return .send(
                                 .error(
-                                    .playbackError(
-                                        state.player.currentItem?.error?.localizedDescription ?? "Unable to play right now. Please, try again later"
-                                    )
+                                    .playbackError(error.localizedDescription)
                                 )
                             )
                         }
@@ -193,7 +183,9 @@ struct Player {
                 state.artworkImageData = data
                 state.isArtworkLoading = false
                 
-                return updateNowPlayingInfo(state: &state)
+                updateNowPlayingInfo(state)
+                
+                return .none
                 
             case .remoteControl(let event):
                 switch event {
@@ -215,86 +207,15 @@ struct Player {
         }
     }
     
-    private func createPlayer(with book: Book) -> AVPlayer {
-        guard let url = URL(string: book.mediaUrl) else {
-            return AVPlayer()
-        }
-        
-        let headers: [String: String] = [
-            "Referer": "https://4read.org/"
-        ]
-        
-        let asset = AVURLAsset(
-            url: url,
-            options: ["AVURLAssetHTTPHeaderFieldsKey": headers]
+    private func updateNowPlayingInfo(_ state: State) {
+        playerClient.updateNowPlayingInfo(
+            state.book?.author ?? "",
+            state.book?.title ?? "",
+            state.book?.duration ?? 0,
+            state.playerProgressState.progress,
+            state.playerControlState.isNowPlaying ? state.playerSpeedState.speed.rawValue : 0,
+            state.artworkImageData
         )
-        
-        let playerItem = AVPlayerItem(asset: asset)
-        let player = AVPlayer(playerItem: playerItem)
-        
-        setupRemoteControls()
-        
-        return player
-    }
-    
-    private func updateNowPlayingInfo(state: inout State) -> Effect<Player.Action> {
-        guard let book = state.book else {
-            return .none
-        }
-        
-        var nowPlaying: [String: Any] = [
-            MPMediaItemPropertyArtist: book.author,
-            MPMediaItemPropertyTitle: book.title,
-            MPMediaItemPropertyPlaybackDuration: book.duration,
-            MPNowPlayingInfoPropertyPlaybackRate: state.playerControlState.isNowPlaying ? state.playerSpeedState.speed.rawValue : 0,
-            MPNowPlayingInfoPropertyElapsedPlaybackTime: state.playerProgressState.progress
-        ]
-        
-        if let artwork = MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyArtwork] {
-            nowPlaying[MPMediaItemPropertyArtwork] = artwork
-        }
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlaying
-        
-        if nowPlaying[MPMediaItemPropertyArtwork] == nil {
-            let updateArtwork: (Data, [String: Any]) -> Void = { imageData, nowPlaying in
-                guard let image = UIImage(data: imageData) else {
-                    return
-                }
-                
-                let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in
-                    return image
-                }
-                
-                var updatedData = nowPlaying
-                updatedData[MPMediaItemPropertyArtwork] = artwork
-                
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = updatedData
-            }
-            
-            if let data = state.artworkImageData {
-                updateArtwork(data, nowPlaying)
-                return .none
-            } else {
-                return .send(.loadArtwork)
-            }
-        } else {
-            return .none
-        }
-    }
-    
-    private func setupRemoteControls() {
-        let commandCenter = MPRemoteCommandCenter.shared()
-        
-        commandCenter.playCommand.isEnabled = true
-        commandCenter.pauseCommand.isEnabled = true
-        commandCenter.changePlaybackPositionCommand.isEnabled = true
-        commandCenter.skipForwardCommand.isEnabled = true
-        commandCenter.skipForwardCommand.preferredIntervals = [10]
-        commandCenter.skipBackwardCommand.isEnabled = true
-        commandCenter.skipBackwardCommand.preferredIntervals = [5]
-        commandCenter.nextTrackCommand.isEnabled = false
-        commandCenter.previousTrackCommand.isEnabled = false
     }
 }
 
