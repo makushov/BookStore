@@ -8,18 +8,18 @@
   "chapters": [
     {
       "id": 1,
-      title: "Beginning",
-      timecode: 0
+      "title": "Beginning",
+      "timecode": 0
     },
     {
       "id": 2,
-      title: "Middle",
-      timecode: 900
+      "title": "Middle",
+      "timecode": 900
     },
     {
       "id": 2,
-      title: "30 sec to end",
-      timecode: 1770
+      "title": "30 sec to end",
+      "timecode": 1770
     }
   ]
 }
