@@ -7,6 +7,8 @@ struct PlayerView: View {
     
     let store: StoreOf<Player>
     
+    @Dependency(\.playerClient) private var playerClient
+    
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
@@ -48,12 +50,12 @@ struct PlayerView: View {
                     viewStore.send(.finishPlaying)
                 }
             )
-//            .onReceive(
-//                viewStore.playerClient.periodicTimePublisher(),
-//                perform: { time in
-//                    viewStore.send(.updateProgress(time.seconds))
-//                }
-//            )
+            .onReceive(
+                playerClient.periodicTimePublisher(),
+                perform: { time in
+                    viewStore.send(.updateProgress(time.seconds))
+                }
+            )
             .onReceive(
                 MPRemoteCommandCenter.shared().remoteCommandPublisher(), perform: { event in
                     viewStore.send(.remoteControl(event))

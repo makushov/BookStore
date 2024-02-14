@@ -20,7 +20,7 @@ struct PlayerClient {
         _ artworkData: Data?
     ) -> Void
     var isNowPlaying: () -> Bool
-    var periodicTimePublisher: () -> AnyPublisher<CMTime, Never>?
+    var periodicTimePublisher: () -> AnyPublisher<CMTime, Never>
 }
 
 extension PlayerClient: DependencyKey {
@@ -68,10 +68,11 @@ fileprivate final class PlayerService {
     
     static let shared = PlayerService()
     
-    var isNowPlaying: Bool { player?.isNowPlaying ?? false }
-    var periodicTimePublisher: AnyPublisher<CMTime, Never>? { player?.periodicTimePublisher() }
+    var isNowPlaying: Bool { player.isNowPlaying  }
+    var periodicTimePublisher: AnyPublisher<CMTime, Never> {
+        player.periodicTimePublisher() }
     
-    private var player: AVPlayer?
+    private var player: AVPlayer = AVPlayer()
     
     func createPlayer(mediaUrl: URL) {
         let headers: [String: String] = [
@@ -90,10 +91,6 @@ fileprivate final class PlayerService {
     }
     
     func play() throws {
-        guard let player else {
-            return
-        }
-        
         if player.currentItem?.status == .readyToPlay {
             try AVAudioSession.sharedInstance().setCategory(.playback)
             try AVAudioSession.sharedInstance().setActive(true)
@@ -107,11 +104,11 @@ fileprivate final class PlayerService {
     }
     
     func pause() {
-        player?.pause()
+        player.pause()
     }
     
     func seekTo(_ timeinterval: TimeInterval) {
-        player?.seek(
+        player.seek(
             to: CMTime(seconds: timeinterval, preferredTimescale: 60000),
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
@@ -119,7 +116,7 @@ fileprivate final class PlayerService {
     }
     
     func setPlayingSpeed(_ speed: Double) {
-        player?.rate = Float(speed)
+        player.rate = Float(speed)
     }
     
     func updateNowPlayingInfo(artist: String, title: String, duration: Double, progress: Double, rate: Double, artworkData: Data?) {

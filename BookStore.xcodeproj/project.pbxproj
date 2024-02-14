@@ -11,7 +11,7 @@
 		2A0F31C82AF270E90044BCB4 /* BookPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31C72AF270E90044BCB4 /* BookPurchase.swift */; };
 		2A0F31CA2AF271790044BCB4 /* BookPurchaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31C92AF271790044BCB4 /* BookPurchaseView.swift */; };
 		2A0F31CF2AF381CB0044BCB4 /* StoreKitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31CE2AF381CB0044BCB4 /* StoreKitClient.swift */; };
-		2A0F31D32AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */; };
+		2A0F31D32AF386640044BCB4 /* ProductPurchaseResult+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Equatable.swift */; };
 		2A52A09A2AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */; };
 		2A5C1EF72B7CBCC000299CBB /* RealHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5C1EF62B7CBCC000299CBB /* RealHTTP */; };
 		2A5C1EF92B7CBE0600299CBB /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5C1EF82B7CBE0600299CBB /* NetworkError.swift */; };
@@ -65,7 +65,7 @@
 		2A0F31C92AF271790044BCB4 /* BookPurchaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPurchaseView.swift; sourceTree = "<group>"; };
 		2A0F31CD2AF37F130044BCB4 /* PurchaseConfig.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = PurchaseConfig.storekit; sourceTree = "<group>"; };
 		2A0F31CE2AF381CB0044BCB4 /* StoreKitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitClient.swift; sourceTree = "<group>"; };
-		2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductPurchaseResult+Eqatable.swift"; sourceTree = "<group>"; };
+		2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductPurchaseResult+Equatable.swift"; sourceTree = "<group>"; };
 		2A52A0982AF3BF030083D65A /* BookStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BookStore.entitlements; sourceTree = "<group>"; };
 		2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPRemoteCommandCenter+Combine.swift"; sourceTree = "<group>"; };
 		2A5C1EF82B7CBE0600299CBB /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
@@ -314,7 +314,7 @@
 				2A0F31C42AF256A10044BCB4 /* AVPlayer+Combine.swift */,
 				2ADF9E0F2AF1574D005987E9 /* AVPlayer+NowPlaying.swift */,
 				2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */,
-				2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */,
+				2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Equatable.swift */,
 				2A70FD4D2AF4D43B00B94931 /* TimeInterval+DisplayableTimeCode.swift */,
 			);
 			path = Extensions;
@@ -438,7 +438,7 @@
 				2A0F31C82AF270E90044BCB4 /* BookPurchase.swift in Sources */,
 				2ADF9E042AF140D9005987E9 /* Book.swift in Sources */,
 				2ADF9DEB2AF0EF72005987E9 /* PlayerButton.swift in Sources */,
-				2A0F31D32AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift in Sources */,
+				2A0F31D32AF386640044BCB4 /* ProductPurchaseResult+Equatable.swift in Sources */,
 				2A52A09A2AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift in Sources */,
 				2ADF9DFA2AF13242005987E9 /* PlayerSpeedView.swift in Sources */,
 				2ADF9DFF2AF13952005987E9 /* PlayerProgressView.swift in Sources */,
