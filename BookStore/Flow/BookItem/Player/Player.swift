@@ -3,7 +3,8 @@ import ComposableArchitecture
 import AVFoundation
 import MediaPlayer
 
-struct Player: Reducer {
+@Reducer
+struct Player {
     
     struct State: Equatable {
         
@@ -34,7 +35,7 @@ struct Player: Reducer {
         case error(PlayerError)
     }
     
-    @Dependency(\.bookClient) var bookClient
+    @Dependency(\.bookClient) private var bookClient
     
     var body: some ReducerOf<Self> {
         Scope(state: \.playerProgressState, action: /Player.Action.playerProgress) {

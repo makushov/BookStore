@@ -2,7 +2,8 @@ import Foundation
 import ComposableArchitecture
 import StoreKit
 
-struct BookPurchase: Reducer {
+@Reducer
+struct BookPurchase {
     
     struct State: Equatable {
         
@@ -27,7 +28,7 @@ struct BookPurchase: Reducer {
         case error(PurchaseError)
     }
     
-    @Dependency(\.storeKitClient) var storeClient
+    @Dependency(\.storeKitClient) private var storeClient
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in

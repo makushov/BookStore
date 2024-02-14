@@ -1,7 +1,8 @@
 import Foundation
 import ComposableArchitecture
 
-struct PlayerModeSwitcher: Reducer {
+@Reducer
+struct PlayerModeSwitcher {
     
     struct State: Equatable {
         

@@ -1,7 +1,8 @@
 import Foundation
 import ComposableArchitecture
 
-struct PlayerSpeed: Reducer {
+@Reducer
+struct PlayerSpeed {
     
     struct State: Equatable {
         

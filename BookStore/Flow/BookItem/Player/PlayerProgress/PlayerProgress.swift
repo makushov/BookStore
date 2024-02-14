@@ -1,7 +1,8 @@
 import Foundation
 import ComposableArchitecture
 
-struct PlayerProgress: Reducer {
+@Reducer
+struct PlayerProgress {
     
     struct State: Equatable {
         

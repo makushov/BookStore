@@ -1,7 +1,8 @@
 import Foundation
 import ComposableArchitecture
 
-struct PlayerControl: Reducer {
+@Reducer
+struct PlayerControl {
     
     struct State: Equatable {
         

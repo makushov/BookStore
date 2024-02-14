@@ -1,7 +1,8 @@
 import Foundation
 import ComposableArchitecture
 
-struct ChaptersList: Reducer {
+@Reducer
+struct ChaptersList {
     
     struct State: Equatable {
         
@@ -29,7 +30,7 @@ struct ChaptersList: Reducer {
         }
     }
     
-    @Dependency(\.dismiss) var dismiss
+    @Dependency(\.dismiss) private var dismiss
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in

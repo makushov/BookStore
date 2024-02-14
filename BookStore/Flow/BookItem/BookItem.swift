@@ -1,7 +1,8 @@
 import Foundation
 import ComposableArchitecture
 
-struct BookItem: Reducer {
+@Reducer
+struct BookItem {
     
     struct State: Equatable {
         
@@ -49,7 +50,7 @@ struct BookItem: Reducer {
         }
     }
     
-    @Dependency(\.bookClient) var bookClient
+    @Dependency(\.bookClient) private var bookClient
     
     var body: some ReducerOf<Self> {
         Scope(state: \.playerState, action: /BookItem.Action.player) {
