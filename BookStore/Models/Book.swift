@@ -1,6 +1,6 @@
-struct Book {
+struct Book: Decodable {
     
-    struct Chapter: Equatable, Identifiable {
+    struct Chapter: Equatable, Identifiable, Decodable {
         
         let id: Int
         let title: String

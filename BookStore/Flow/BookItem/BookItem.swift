@@ -39,7 +39,7 @@ struct BookItem {
     enum Action: Equatable {
         
         case fetchBook
-        case bookResponse(Book)
+        case bookResponse(TaskResult<Book>)
         case player(Player.Action)
         case purchaseBook(BookPurchase.Action)
         case destination(PresentationAction<Destination.Action>)
@@ -67,13 +67,30 @@ struct BookItem {
                 state.isLoading = true
                 
                 return .run { send in
-                    try await send(.bookResponse(bookClient.fetch()))
+                    await send(
+                        .bookResponse(
+                            TaskResult { try await bookClient.fetch() }
+                        )
+                    )
                 }
                 
-            case .bookResponse(let book):
+            case .bookResponse(.success(let book)):
                 state.isLoading = false
                 state.book = book
                 return .send(.player(.createPlayer(book)))
+                
+            case .bookResponse(.failure(let error)):
+                state.isLoading = false
+                
+                let errorMessage: String
+                if let networkError = error as? NetworkError {
+                    errorMessage = networkError.message
+                } else {
+                    errorMessage = error.localizedDescription
+                }
+                
+                state.destination = .alert(.error(message: errorMessage))
+                return .none
 
             case let .purchaseBook(.error(error)):
                 state.isLoading = false

@@ -13,6 +13,8 @@
 		2A0F31CF2AF381CB0044BCB4 /* StoreKitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31CE2AF381CB0044BCB4 /* StoreKitClient.swift */; };
 		2A0F31D32AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */; };
 		2A52A09A2AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */; };
+		2A5C1EF72B7CBCC000299CBB /* RealHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5C1EF62B7CBCC000299CBB /* RealHTTP */; };
+		2A5C1EF92B7CBE0600299CBB /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5C1EF82B7CBE0600299CBB /* NetworkError.swift */; };
 		2A70FD4A2AF4CF5500B94931 /* ChaptersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A70FD492AF4CF5500B94931 /* ChaptersList.swift */; };
 		2A70FD4C2AF4D02500B94931 /* ChaptersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A70FD4B2AF4D02500B94931 /* ChaptersListView.swift */; };
 		2A70FD4E2AF4D43B00B94931 /* TimeInterval+DisplayableTimeCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A70FD4D2AF4D43B00B94931 /* TimeInterval+DisplayableTimeCode.swift */; };
@@ -65,6 +67,7 @@
 		2A0F31D22AF386640044BCB4 /* ProductPurchaseResult+Eqatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductPurchaseResult+Eqatable.swift"; sourceTree = "<group>"; };
 		2A52A0982AF3BF030083D65A /* BookStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BookStore.entitlements; sourceTree = "<group>"; };
 		2A52A0992AF3D13D0083D65A /* MPRemoteCommandCenter+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPRemoteCommandCenter+Combine.swift"; sourceTree = "<group>"; };
+		2A5C1EF82B7CBE0600299CBB /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		2A70FD492AF4CF5500B94931 /* ChaptersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChaptersList.swift; sourceTree = "<group>"; };
 		2A70FD4B2AF4D02500B94931 /* ChaptersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChaptersListView.swift; sourceTree = "<group>"; };
 		2A70FD4D2AF4D43B00B94931 /* TimeInterval+DisplayableTimeCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+DisplayableTimeCode.swift"; sourceTree = "<group>"; };
@@ -106,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A5C1EF72B7CBCC000299CBB /* RealHTTP in Frameworks */,
 				2ADF9DE72AF0EB16005987E9 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,6 +271,7 @@
 			children = (
 				2ADF9E032AF140D9005987E9 /* Book.swift */,
 				2A70FD5C2AF510D600B94931 /* SubscriptionPlans.swift */,
+				2A5C1EF82B7CBE0600299CBB /* NetworkError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -330,6 +335,7 @@
 			name = BookStore;
 			packageProductDependencies = (
 				2ADF9DE62AF0EB16005987E9 /* ComposableArchitecture */,
+				2A5C1EF62B7CBCC000299CBB /* RealHTTP */,
 			);
 			productName = BookStore;
 			productReference = 2ADF9DB32AF0E905005987E9 /* BookStore.app */;
@@ -384,6 +390,7 @@
 			mainGroup = 2ADF9DAA2AF0E905005987E9;
 			packageReferences = (
 				2ADF9DE52AF0EB16005987E9 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				2A5C1EF52B7CBCC000299CBB /* XCRemoteSwiftPackageReference "RealHTTP" */,
 			);
 			productRefGroup = 2ADF9DB42AF0E905005987E9 /* Products */;
 			projectDirPath = "";
@@ -420,6 +427,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2ADF9DE22AF0EADF005987E9 /* PlayerControl.swift in Sources */,
+				2A5C1EF92B7CBE0600299CBB /* NetworkError.swift in Sources */,
 				2A70FD4A2AF4CF5500B94931 /* ChaptersList.swift in Sources */,
 				2ADF9DB72AF0E905005987E9 /* BookStoreApp.swift in Sources */,
 				2ADF9E0A2AF14693005987E9 /* BookItemView.swift in Sources */,
@@ -733,6 +741,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2A5C1EF52B7CBCC000299CBB /* XCRemoteSwiftPackageReference "RealHTTP" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/immobiliare/RealHTTP.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.8.3;
+			};
+		};
 		2ADF9DE52AF0EB16005987E9 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "http://github.com/pointfreeco/swift-composable-architecture#Installation";
@@ -744,6 +760,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2A5C1EF62B7CBCC000299CBB /* RealHTTP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A5C1EF52B7CBCC000299CBB /* XCRemoteSwiftPackageReference "RealHTTP" */;
+			productName = RealHTTP;
+		};
 		2ADF9DE62AF0EB16005987E9 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2ADF9DE52AF0EB16005987E9 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
